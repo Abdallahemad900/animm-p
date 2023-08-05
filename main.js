@@ -9,7 +9,7 @@ import * as dat from 'dat.gui';
 import { ShadowMapViewer } from 'three/addons/utils/ShadowMapViewer.js';
 
 
-const monkeyUrl = new URL('/house/RobotExpressive.glb', import.meta.url);
+const monkeyUrl = new URL('/house/robot.fbx', import.meta.url);
 
 const renderer = new THREE.WebGLRenderer();
 renderer.setSize(window.innerWidth, window.innerHeight);
@@ -101,28 +101,6 @@ gui.addColor(options, 'cubeColor').onChange(function(e){
 	cube.material.color.set(e)
 });
 
-// var cam = gui.addFolder('Camera');
-// cam.add(options.camera, 'speed', 0, 0.0010).listen();
-// cam.add(camera.position, 'y', 0, 100).listen();
-// cam.open();
-
-// var velocity = gui.addFolder('Velocity');
-// velocity.add(options, 'velx', -0.2, 0.2).name('X').listen();
-// velocity.add(options, 'vely', -0.2, 0.2).name('Y').listen();
-// velocity.open();
-
-// var box = gui.addFolder('Cube');
-// box.add(cube.scale, 'x', 0, 3).name('Width').listen();
-// box.add(cube.scale, 'y', 0, 3).name('Height').listen();
-// box.add(cube.scale, 'z', 0, 3).name('Length').listen();
-// box.add(cube.material, 'wireframe').listen();
-// box.open();
-
-// gui.add(options, 'stop');
-// gui.add(options, 'reset');
-
-
-
 
 // camera
 
@@ -136,8 +114,8 @@ orbit.update();
 
 //loaders
 
-const assetLoader = new GLTFLoader();
-// const assetLoader = new FBXLoader();
+// const assetLoader = new GLTFLoader();
+const assetLoader = new FBXLoader();
 let mixer;
 assetLoader.load(monkeyUrl.href, function(object) {
 	
@@ -145,18 +123,20 @@ assetLoader.load(monkeyUrl.href, function(object) {
     scene.add(model);
     mixer = new THREE.AnimationMixer(model);
     const clips = object.animations;
-    model.position.set(1,3,1);
+    // hint all codes below to activate fbx
 
-    model.castShadow = true ;
-    model.traverse(function(node) {
-        if(node.isMesh)
-        node.castShadow = true ;
-    });
+    // model.position.set(1,3,1);
+
+    // model.castShadow = true ;
+    // model.traverse(function(node) {
+    //     if(node.isMesh)
+    //     node.castShadow = true ;
+    // });
     //in fbx use these below
 
-	// scene.add( object );
+	scene.add( object );
 	// object.rotation.set (4.7,0,0)
-	// object.scale.set(0.01,0.01,0.01 )
+	object.scale.set(0.01,0.01,0.01 )
 
     // Play a certain animation
     // const clip = THREE.AnimationClip.findByName(clips, 'HeadAction');
