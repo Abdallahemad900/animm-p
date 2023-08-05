@@ -9,7 +9,7 @@ import * as dat from 'dat.gui';
 import { ShadowMapViewer } from 'three/addons/utils/ShadowMapViewer.js';
 
 
-const monkeyUrl = new URL('/house/plaane.glb', import.meta.url);
+const monkeyUrl = new URL('/house/RobotExpressive.glb', import.meta.url);
 
 const renderer = new THREE.WebGLRenderer();
 renderer.setSize(window.innerWidth, window.innerHeight);
@@ -38,8 +38,8 @@ scene.add(directionalLight);
 
 
 //Hemisphere
-// var light = new THREE.HemisphereLight(0xf6e86d, 0x404040, 1);
-// scene.add(light);
+var light = new THREE.HemisphereLight(0xf6e86d, 0x404040, 1);
+scene.add(light);
 
 
 
@@ -75,7 +75,53 @@ scene.add(directionalLight);
 
 // gui
 
+
+const geometry = new THREE.BoxGeometry( 1, 1, 1 );
+const material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
+const cube = new THREE.Mesh( geometry, material );
+scene.add( cube );
+
+
+
 const gui =new dat.GUI();
+const cubeFolder = gui.addFolder('Cube')
+cubeFolder.add(cube.rotation, 'x', 0, Math.PI * 2)
+cubeFolder.add(cube.rotation, 'y', 0, Math.PI * 2)
+cubeFolder.add(cube.rotation, 'z', 0, Math.PI * 2)
+cubeFolder.open()
+const cameraFolder = gui.addFolder('Camera')
+cameraFolder.add(camera.position, 'z', 0, 10)
+cameraFolder.open()
+
+const options ={
+	cubeColor : '#ffea00'
+};
+
+gui.addColor(options, 'cubeColor').onChange(function(e){
+	cube.material.color.set(e)
+});
+
+// var cam = gui.addFolder('Camera');
+// cam.add(options.camera, 'speed', 0, 0.0010).listen();
+// cam.add(camera.position, 'y', 0, 100).listen();
+// cam.open();
+
+// var velocity = gui.addFolder('Velocity');
+// velocity.add(options, 'velx', -0.2, 0.2).name('X').listen();
+// velocity.add(options, 'vely', -0.2, 0.2).name('Y').listen();
+// velocity.open();
+
+// var box = gui.addFolder('Cube');
+// box.add(cube.scale, 'x', 0, 3).name('Width').listen();
+// box.add(cube.scale, 'y', 0, 3).name('Height').listen();
+// box.add(cube.scale, 'z', 0, 3).name('Length').listen();
+// box.add(cube.material, 'wireframe').listen();
+// box.open();
+
+// gui.add(options, 'stop');
+// gui.add(options, 'reset');
+
+
 
 
 // camera
@@ -84,8 +130,8 @@ camera.position.set(10, 10, 10);
 orbit.update();
 // grid
 
-const grid = new THREE.GridHelper(30, 30);
-scene.add(grid);
+// const grid = new THREE.GridHelper(30, 30);
+// scene.add(grid);
 
 
 //loaders
@@ -99,7 +145,7 @@ assetLoader.load(monkeyUrl.href, function(object) {
     scene.add(model);
     mixer = new THREE.AnimationMixer(model);
     const clips = object.animations;
-    // model.position.set(1,3,1);
+    model.position.set(1,3,1);
 
     model.castShadow = true ;
     model.traverse(function(node) {
@@ -108,9 +154,9 @@ assetLoader.load(monkeyUrl.href, function(object) {
     });
     //in fbx use these below
 
-	scene.add( object );
+	// scene.add( object );
 	// object.rotation.set (4.7,0,0)
-// 	object.scale.set(0.01,0.01,0.01 )
+	// object.scale.set(0.01,0.01,0.01 )
 
     // Play a certain animation
     // const clip = THREE.AnimationClip.findByName(clips, 'HeadAction');
@@ -131,6 +177,10 @@ assetLoader.load(monkeyUrl.href, function(object) {
 
 const clock = new THREE.Clock();
 function animate() {
+
+	// cube.rotation.x += 0.01;
+	// cube.rotation.y += 0.01;
+
     if(mixer)
         mixer.update(clock.getDelta());
 		
@@ -152,7 +202,7 @@ window.addEventListener('resize', function() {
 
 // //plane
 
-// const PlaneGeometry =new THREE.PlaneGeometry (100,100);
+// const PlaneGeometry =new THREE.PlaneGeometry (50,10);
 // const planeMaterial = new THREE.MeshPhongMaterial({color:0xFFFFFF 
 // 	,side : THREE.DoubleSide,  dithering:true });
 // 	// remove 3 double side if u want to see throw walls
